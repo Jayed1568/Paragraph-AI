@@ -1,6 +1,3 @@
-Here's a professional `README.md` for your GitHub repository based on your project and the files you've uploaded:
-
----
 
 # 🧠 ParagraphAI — Fine-Tuning GPT-2 on Structured Prompt-Completion Pairs
 
