@@ -1,87 +1,100 @@
 
-# 🧠 ParagraphAI — Fine-Tuning GPT-2 on Structured Prompt-Completion Pairs
+# ParagraphAI: Prompt-to-Completion Text Generation Using GPT-2
 
-## Overview
+This project demonstrates how to fine-tune a pre-trained GPT-2 language model using supervised learning on a custom dataset consisting of writing prompts and their corresponding paragraph completions.
 
-This project demonstrates how to fine-tune a pre-trained GPT-2 model using a custom dataset of student-written paragraphs. The dataset is structured as prompt → completion pairs, allowing the model to learn controlled, topic-specific text generation. Training and inference are performed in Google Colab using Hugging Face's Transformers and Datasets libraries.
+## 📘 Overview
 
----
+- **Model**: Fine-tuned GPT-2 (`openai-community/gpt2`)
+- **Dataset**: Text paragraphs separated by `---`, structured into `prompt → completion`
+- **Training Framework**: Hugging Face Transformers, Datasets, and PyTorch
+- **Environment**: Google Colab
 
-## 📁 Repository Contents
+## 📁 Directory Structure
 
-* `ParagraphAI.ipynb` — The complete Google Colab notebook with all code for preprocessing, fine-tuning, and text generation.
-* `Paragraphs.txt` — Raw dataset file containing paragraphs separated by `---`.
-* `training_log.csv` — Training log file with loss values for each step.
-* `data.jsonl` — (Optional/Not used) JSONL file version of the dataset for other applications.
-* `prompt_completion_dataset.csv` — Exported DataFrame containing all cleaned and parsed prompt → completion pairs.
+```
 
----
+ParagraphAI/
+├── Paragraphs.txt                  # Original raw dataset
+├── data.jsonl                      # (Optional) Exported JSONL format
+├── prompt\_completion\_dataset.csv  # Final formatted dataset
+├── training\_log.csv               # Training metrics logged by Trainer
+├── my\_finetuned\_gpt2/             # Folder with saved model and tokenizer
+├── ParagraphAI.ipynb              # Complete notebook with training and inference
 
-## 💡 Project Highlights
+````
 
-* **Model**: Fine-tunes `gpt2` from Hugging Face's `openai-community/gpt2` checkpoint.
-* **Objective**: Generate coherent, structured paragraphs from educational-style prompts.
-* **Training Strategy**:
+## 🚀 Features
 
-  * Input: `"### PROMPT:\n<user_prompt>\n\n### COMPLETION:\n<expected_response>"`
-  * Epochs: 3
-  * Batch Size: 2
-  * Mixed Precision: Enabled (FP16)
-* **Logging**: Loss metrics logged using Hugging Face Trainer; available in `training_log.csv`.
-* **Text Generation**: Model generates completions for unseen prompts using the trained checkpoint.
+- Converts raw `.txt` data into structured prompt/completion pairs
+- Tokenizes and prepares data for supervised fine-tuning
+- Logs training progress and loss values
+- Saves model and tokenizer locally for future inference
+- **Three methods** of inference:
+  1. Static prompt in code
+  2. Dynamic prompt using Python’s `input()`
+  3. GUI interface with Gradio
 
----
+## 🧠 Model Training Summary
 
-## 🔧 Setup & Installation
+- **Tokenizer**: AutoTokenizer from Hugging Face (`gpt2`)
+- **Tokenized Length**: Max 512 tokens
+- **Batch Size**: 2
+- **Epochs**: 3
+- **Trainer API**: Hugging Face Trainer with `TrainingArguments`
+- **WandB**: Disabled for simplicity (`os.environ["WANDB_DISABLED"] = "true"`)
 
-In Google Colab:
+## 💡 Inference Options
+
+### 1. Hardcoded Prompt
+```python
+print(generate_text(prompt="How the traffic jam is Harming us?"))
+````
+
+### 2. Dynamic Input
+
+```python
+prompt = input("Enter your prompt: ")
+print(generate_text(prompt))
+```
+
+### 3. Gradio GUI
+
+```python
+import gradio as gr
+interface = gr.Interface(fn=generate_text, inputs="text", outputs="text", title="ParagraphAI Generator")
+interface.launch()
+```
+
+## 🧪 Results
+
+* Training converged with decreasing loss per step
+* The model successfully generates contextually relevant paragraphs
+* Output examples are available in the notebook screenshots
+
+## 📦 Installation
 
 ```bash
-!pip install pandas transformers datasets
+pip install transformers datasets pandas gradio
 ```
 
----
+## 📈 Logs
 
-## 🚀 How to Use
+Training logs are saved to:
 
-1. Upload `Paragraphs.txt` in Colab.
-2. Run `ParagraphAI.ipynb` to:
-
-   * Parse the dataset
-   * Tokenize using GPT-2 tokenizer
-   * Fine-tune GPT-2 with prompt-completion formatted inputs
-3. Generate new completions using:
-
-   ```python
-   generate_text("What are the effects of air pollution?")
-   ```
-
----
-
-## 🧪 Example Output
-
-```text
-Prompt: What are the effects of air pollution?
-
-Completion:
-Air pollution causes severe health problems including respiratory diseases...
+```
+/ParagraphAI/training_log.csv
 ```
 
-> 📌 Include output screenshots in the report or directly in this README under `/screenshots`.
+## ✅ Improvements
 
----
+* Interactive prompt interface (Gradio)
+* Dynamic user input with `input()`
+* Optional: JSONL export for Hugging Face upload
 
-## 📊 Results
+## 📜 License
 
-* Loss decreased steadily over training epochs (see `training_log.csv`).
-* The model successfully generalizes across various writing styles (opinion, informative, descriptive).
-* See the project report for detailed performance summary and challenges.
-
----
-
-## 📑 License
-
-This project is open-source and intended for educational use only.
+This project is released under the MIT License.
 
 ---
 
